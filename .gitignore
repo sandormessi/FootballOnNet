@@ -9,8 +9,7 @@
 /Client/Client/bin/
 /Client/Client/Client.csproj.user
 
-/Server/GameServer/bin/
-/Server/GameServer/obj/
+
 
 # User-specific files
 *.rsuser
