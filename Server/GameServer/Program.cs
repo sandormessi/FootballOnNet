@@ -3,13 +3,18 @@
     using System;
     using System.Net;
 
-    public class Program
-    {
-        private static readonly EndPoint EndPoint = new IPEndPoint(IPAddress.Loopback, 55555);
+    using GameServer.Network;
 
-        static void Main()
+    public static class Program
+    {
+        private static readonly IPEndPoint EndPoint = new IPEndPoint(IPAddress.Loopback, 55555);
+
+        private static void Main()
         {
-            Console.ReadLine();
+            var server2 = new Server(EndPoint);
+            server2.Start();
+
+            Console.ReadKey();
         }
     }
 }

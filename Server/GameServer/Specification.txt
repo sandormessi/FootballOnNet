@@ -1,0 +1,27 @@
+﻿The server proccesses the messages as packets.
+A packet contains a PacketHeader:
+	- Command (the type of command)
+	- SizeOfPacket (the size of data will be sent)
+	- MessageType (how the packet's data should be processed)
+And a "body" as a Stream
+
+The messages are XML-messages, except when the data is a simple type, like Integer.
+The size of Pitch, the time of Match, the Scores (goals) are determined by the Server.
+The Client just moves the ball and the players. The Server acts as a mediator and the Referre as well.
+The connection's state is not "stored" --> if the connection is lost then it cannot be recovered.
+
+The initial messages must be sent in the correct order!
+
+Messages from the server's perspective:
+	- Client sends the Team
+	- Client query the Pitch (its size)
+	- Process the client's Position Collection continuously
+	- Process the client's positon of the Ball continuously
+	- The server send a Match Result at the end of the match
+
+Messages from the client's perspective:
+	- Sends it's Team
+	- Query the Pitch
+	- Process the Overall Match Data continously
+	- Send the Position Collection continuously (players and the ball)
+	- Process the Match Result at the end of Match
