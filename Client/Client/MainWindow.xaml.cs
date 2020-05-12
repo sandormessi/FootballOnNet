@@ -23,6 +23,7 @@
         private readonly ServerCommunicator communicator;
         private readonly Team team = new Team
         {
+
             // The players int THIS TEAM
             Players = new List<Player>
             {
@@ -120,6 +121,7 @@
             initialPlayerPositions.Positions.Add(new Position { ID = controller.HomeTeam.Players[8].ID, X = 150, Y = 200 });
             initialPlayerPositions.Positions.Add(new Position { ID = controller.HomeTeam.Players[9].ID, X = 150, Y = 50 });
             initialPlayerPositions.Positions.Add(new Position { ID = controller.HomeTeam.Players[10].ID, X = 150, Y = 150 });
+
             controller.HomePositionCollection = initialPlayerPositions;
 
             Task.Factory.StartNew(() =>
@@ -149,13 +151,6 @@
 
         private async void SetHomeTeamPositions()
         {
-            // The movement (logic) of this Client
-            // Goes here
-            // Invoke this method and set the positions (players and the ball)
-            // Ball: controller.BallPosition
-            // Players: controller.HomePositionCollection.Positions
-            // The positions will be sent continuously
-
             // Then move the players on the GUI
             await MoveHomePlayers();
         }
