@@ -11,6 +11,6 @@
         public int Y { get; set; }
 
         /// <summary>Gets the object's <see cref="Guid"/> that this <see cref="Position"/> associated with.</summary>
-        public Guid Id { get; set; }
+        public Guid ID { get; set; }
     }
 }

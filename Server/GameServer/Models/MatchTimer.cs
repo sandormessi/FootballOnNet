@@ -1,7 +1,8 @@
-﻿namespace GameServer.Models
+﻿using System.Timers;
+
+namespace GameServer.Models
 {
     using System;
-    using System.Timers;
 
     public class MatchTimer
     {

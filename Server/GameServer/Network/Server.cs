@@ -3,6 +3,7 @@
     using System;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
 
     using GameServer.Controllers;
 
@@ -30,6 +31,7 @@
 
             isListening = true;
             tcpListener.Start(10);
+            //Task.Factory.StartNew(ReceiveConnections);
             ReceiveConnections();
         }
 

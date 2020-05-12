@@ -1,4 +1,4 @@
-﻿namespace GameServer.Models.Message.InitialMessages
+﻿namespace GameServer.Models
 {
     using System.Collections.Generic;
 

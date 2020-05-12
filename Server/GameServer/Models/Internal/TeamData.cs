@@ -1,8 +1,6 @@
-﻿namespace GameServer.Models.Internal
+﻿namespace GameServer.Models
 {
     using System;
-
-    using GameServer.Models.Message.InitialMessages;
 
     internal class TeamData
     {
