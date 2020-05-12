@@ -151,11 +151,14 @@
 
         private async void SetHomeTeamPositions()
         {
+            // Then move the players on the GUI
             await MoveHomePlayers();
         }
 
         private async Task MoveHomePlayers()
         {
+            // When the position of home players are set
+            // then move them on the GUI as well
             for (var i = 0; i < controller.AwayTeam.Players.Count; i++)
             {
                 Player homePlayer = controller.AwayTeam.Players[i];
