@@ -9,7 +9,13 @@
             MessageType = messageType;
         }
 
-        public static int HeaderSize => sizeof(byte) + sizeof(int) + sizeof(byte);
+        public static int HeaderSize
+        {
+            get
+            {
+                return sizeof(byte) + sizeof(int) + sizeof(byte);
+            }
+        }
 
         public byte Command { get; }
         public int PackageSize { get; }

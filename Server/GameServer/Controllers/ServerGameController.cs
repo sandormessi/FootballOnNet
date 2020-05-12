@@ -7,7 +7,8 @@
 
     
     using GameServer.Models;
-    
+    using GameServer.Models.Internal;
+    using GameServer.Models.Message.InitialMessages;
     using GameServer.Network;
     using GameServer.Serializer;
 
@@ -36,7 +37,7 @@
 
             homeTeamData = new TeamData();
             awayTeamData = new TeamData();
-            dataController = new TeamDataController(homeTeamData, awayTeamData);
+            var dataController = new TeamDataController(homeTeamData, awayTeamData);
             dataController.TeamsAreReady += DataController_TeamsAreReady;
         }
 
@@ -78,7 +79,25 @@
 
         private void SetInitialPositionCollection()
         {
-            
+            for (var i = 0; i < 11; i++)
+            {
+                var rn = new Random(i);
+                homeTeamData.PositionCollection.AddPosition(new Position
+                {
+                    X = rn.Next(0, 500), 
+                    Y = rn.Next(0, 500)
+                });
+            }
+
+            for (var i = 0; i < 11; i++)
+            {
+                var rn = new Random(i);
+                awayTeamData.PositionCollection.AddPosition(new Position
+                {
+                    X = rn.Next(0, 500),
+                    Y = rn.Next(0, 500)
+                });
+            }
         }
 
         public void SetHomeTeamCommunicator(ServerCommunicator homeTeamCommunicator)
@@ -96,8 +115,6 @@
 
         private void MatchTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            // Send the match result at the end of the Match to both TEAM (Client)
-
             awayTeamData.DataSendingStopRequest = true;
             homeTeamData.DataSendingStopRequest = true;
 
@@ -125,7 +142,6 @@
 
         private readonly TeamData homeTeamData;
         private readonly TeamData awayTeamData;
-        private readonly TeamDataController dataController;
 
         private void ProcessClientPacket(Packet packet, ServerCommunicator communicator, TeamData teamData1, TeamData teamData2)
         {
@@ -190,14 +206,12 @@
                             Console.WriteLine("The Position Collection message is invalid.");
                             break;
                         }
-
                         // Store the Position Collection
                         game.ProcessPositionCollection(collection, communicator == homeTeamCommunicator);
 
                         Console.WriteLine("Position Collection message has been processed.");
 
                         break;
-
                     case MessageType.BallPosition when command == CommandType.ContinuousSet:
                         var readPosition = DataSerializer.ReadSerializedData<Position>(packet.Data);
                         if (readPosition is null)
@@ -205,23 +219,12 @@
                             Console.WriteLine("The Ball Position message is invalid.");
                             break;
                         }
-
                         // Set the Position of the Ball
                         game.ProcessBallPosition(readPosition);
 
                         Console.WriteLine("Ball Position message has been processed.");
 
                         break;
-
-                    //case MessageType.OverallMatchData when command == CommandType.Get:
-                    //    Console.WriteLine("Overall Match Data after message initialization has been processed.");
-
-                    //    SendOverallMatchData(communicator, CommandType.Set);
-
-                    //    Console.WriteLine("Overall Match Data message after initialization has been sent.");
-
-                    //    break;
-
                     default:
 
                         Console.WriteLine("Invalid/unknown packet.");

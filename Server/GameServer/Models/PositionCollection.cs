@@ -10,7 +10,7 @@
 
         public void AddPosition(Position position)
         {
-            Position foundItem = Positions.FirstOrDefault(x => x.ID == position.ID);
+            Position foundItem = Positions.FirstOrDefault(x => x.Id == position.Id);
             if (!(foundItem is null))
             {
                 throw new InvalidOperationException("The specified position already exists.");
@@ -21,7 +21,7 @@
 
         public void SetPosition(Position position)
         {
-            Position foundItem = Positions.FirstOrDefault(x => x.ID == position.ID);
+            Position foundItem = Positions.FirstOrDefault(x => x.Id == position.Id);
             if (foundItem is null)
             {
                 throw new InvalidOperationException("The specified position does not exist.");
@@ -33,7 +33,7 @@
         
         public Position GetPosition(Guid id)
         {
-            Position foundItem = Positions.FirstOrDefault(x => x.ID == id);
+            Position foundItem = Positions.FirstOrDefault(x => x.Id == id);
             if (foundItem is null)
             {
                 throw new InvalidOperationException("The specified position does not exist.");

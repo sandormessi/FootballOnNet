@@ -1,5 +1,7 @@
 ﻿namespace GameServer.Models
 {
+    using GameServer.Models.Message.InitialMessages;
+
     internal static class OverallMatchStandingCreator
     {
         internal static OverallMatchStanding Create(Game game, MatchTimer timer, bool isHome)

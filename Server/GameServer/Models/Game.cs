@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using GameServer.Models.Message.InitialMessages;
+
     /// <summary>Represents the Game itself.</summary>
     public class Game
     {
@@ -102,7 +104,7 @@
                 return;
             }
             IEnumerable<Player> allPlayers = HomeTeam.Players.Union(AwayTeam.Players);
-            Ball.Owner = allPlayers.Single(x => x.ID == ballPossessor.ID);
+            Ball.Owner = allPlayers.Single(x => x.Id == ballPossessor.Id);
         }
     }
 }

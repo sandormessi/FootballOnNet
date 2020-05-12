@@ -1,4 +1,4 @@
-﻿namespace GameServer.Models
+﻿namespace GameServer.Models.Message.InitialMessages
 {
     /// <summary>Represents the football pitch.</summary>
     public class Pitch : IdentifiableObject

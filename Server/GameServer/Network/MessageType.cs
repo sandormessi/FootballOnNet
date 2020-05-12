@@ -4,15 +4,10 @@
     public enum MessageType : byte
     {
         OverallMatchData,
-        Position,
         BallPosition,
         PositionCollection,
         Team,
-        RemainingMatchTime,
-        MatchTime,
         Pitch,
-        Score,
         MatchResult,
-        StatusReport
     }
 }
