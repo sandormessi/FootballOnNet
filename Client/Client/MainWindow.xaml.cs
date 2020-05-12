@@ -88,7 +88,6 @@
            
             await footballPitch.Dispatcher.InvokeAsync(() =>
             {
-                // Sets the ball's position on the pitch
                 UIElement ball = footballPitch.Children.Cast<UIElement>().Last();
                 Canvas.SetLeft(ball, controller.OverallMatchStanding.BallPosition.X);
                 Canvas.SetTop(ball, controller.OverallMatchStanding.BallPosition.Y);
