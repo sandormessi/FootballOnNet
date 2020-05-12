@@ -2,6 +2,8 @@
 {
     using System;
 
+    using GameServer.Models.Internal;
+
     internal class TeamDataController
     {
         private readonly TeamData teamData1;

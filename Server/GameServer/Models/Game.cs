@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using GameServer.Models.Message.InitialMessages;
+
     /// <summary>Represents the Game itself.</summary>
     public class Game
     {
@@ -70,6 +72,7 @@
             DetermineScore();
             DetermineBallPossessor();
         }
+
         public void ProcessBallPosition(Position ballPosition)
         {
             BallPosition = ballPosition ?? throw new ArgumentNullException(nameof(ballPosition));
@@ -81,8 +84,6 @@
             }
         }
 
-
-
         private void DetermineScore()
         {
             IEnumerable<Position> allPosition = AwayPositions.Positions.Union(HomePositions.Positions);
@@ -93,6 +94,7 @@
                 Scores.Add(new Score { Scorer = Ball.Owner });
             }
         }
+
         private void DetermineBallPossessor()
         {
             IEnumerable<Position> allPosition = AwayPositions.Positions.Union(HomePositions.Positions);
@@ -102,7 +104,7 @@
                 return;
             }
             IEnumerable<Player> allPlayers = HomeTeam.Players.Union(AwayTeam.Players);
-            Ball.Owner = allPlayers.Single(x => x.ID == ballPossessor.ID);
+            Ball.Owner = allPlayers.Single(x => x.Id == ballPossessor.Id);
         }
     }
 }

@@ -2,18 +2,20 @@
 {
     using System;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Timers;
 
     
     using GameServer.Models;
-    
+    using GameServer.Models.Internal;
+    using GameServer.Models.Message.InitialMessages;
     using GameServer.Network;
     using GameServer.Serializer;
 
     public class ServerGameController
     {
-        private readonly object syncObject = new object();
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
         private readonly MatchTimer matchTimer;
         private readonly Random random = new Random(2576);
@@ -36,7 +38,7 @@
 
             homeTeamData = new TeamData();
             awayTeamData = new TeamData();
-            dataController = new TeamDataController(homeTeamData, awayTeamData);
+            var dataController = new TeamDataController(homeTeamData, awayTeamData);
             dataController.TeamsAreReady += DataController_TeamsAreReady;
         }
 
@@ -78,7 +80,25 @@
 
         private void SetInitialPositionCollection()
         {
-            
+            for (var i = 0; i < 11; i++)
+            {
+                var rn = new Random(i);
+                homeTeamData.PositionCollection.AddPosition(new Position
+                {
+                    X = rn.Next(0, 500), 
+                    Y = rn.Next(0, 500)
+                });
+            }
+
+            for (var i = 0; i < 11; i++)
+            {
+                var rn = new Random(i);
+                awayTeamData.PositionCollection.AddPosition(new Position
+                {
+                    X = rn.Next(0, 500),
+                    Y = rn.Next(0, 500)
+                });
+            }
         }
 
         public void SetHomeTeamCommunicator(ServerCommunicator homeTeamCommunicator)
@@ -96,8 +116,6 @@
 
         private void MatchTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            // Send the match result at the end of the Match to both TEAM (Client)
-
             awayTeamData.DataSendingStopRequest = true;
             homeTeamData.DataSendingStopRequest = true;
 
@@ -125,7 +143,6 @@
 
         private readonly TeamData homeTeamData;
         private readonly TeamData awayTeamData;
-        private readonly TeamDataController dataController;
 
         private void ProcessClientPacket(Packet packet, ServerCommunicator communicator, TeamData teamData1, TeamData teamData2)
         {
@@ -141,8 +158,6 @@
                         var teamDeserialized = DataSerializer.ReadSerializedData<Team>(packet.Data);
                         if (teamDeserialized is null)
                         {
-                            // Do not increment the MessageRead field
-                            // Next time the server still be waiting for this message type
                             return;
                         }
 
@@ -154,8 +169,7 @@
 
                     case 0:
                         Console.WriteLine("Invalid packet.");
-                        // Do not increment the MessageRead field
-                        // Next time the server still be waiting for this message type
+                       
                         return;
 
                     case 1 when (messageType == MessageType.Pitch) && (command == CommandType.Get):
@@ -174,8 +188,7 @@
                     
                     case 1:
                         Console.WriteLine("Invalid packet.");
-                        // Do not increment the MessageRead field
-                        // Next time the server still be waiting for this message type
+              
                         return;
                 }
             }
@@ -190,14 +203,12 @@
                             Console.WriteLine("The Position Collection message is invalid.");
                             break;
                         }
-
                         // Store the Position Collection
                         game.ProcessPositionCollection(collection, communicator == homeTeamCommunicator);
 
                         Console.WriteLine("Position Collection message has been processed.");
 
                         break;
-
                     case MessageType.BallPosition when command == CommandType.ContinuousSet:
                         var readPosition = DataSerializer.ReadSerializedData<Position>(packet.Data);
                         if (readPosition is null)
@@ -205,23 +216,12 @@
                             Console.WriteLine("The Ball Position message is invalid.");
                             break;
                         }
-
                         // Set the Position of the Ball
                         game.ProcessBallPosition(readPosition);
 
                         Console.WriteLine("Ball Position message has been processed.");
 
                         break;
-
-                    //case MessageType.OverallMatchData when command == CommandType.Get:
-                    //    Console.WriteLine("Overall Match Data after message initialization has been processed.");
-
-                    //    SendOverallMatchData(communicator, CommandType.Set);
-
-                    //    Console.WriteLine("Overall Match Data message after initialization has been sent.");
-
-                    //    break;
-
                     default:
 
                         Console.WriteLine("Invalid/unknown packet.");
@@ -235,16 +235,17 @@
 
         private void SendOverallMatchData(ServerCommunicator communicator, CommandType commandType)
         {
-            lock (syncObject)
-            {
+            semaphore.Wait();
+
                 Stream data = DataSerializer.CreateSerializedData(OverallMatchStandingCreator.Create(game, matchTimer,
-                    communicator != homeTeamCommunicator));
+                communicator != homeTeamCommunicator));
 
-                PositionCollection test = DataSerializer.ReadSerializedData<OverallMatchStanding>(data).PositionCollection;
+            PositionCollection test = DataSerializer.ReadSerializedData<OverallMatchStanding>(data).PositionCollection;
 
-                PacketHeader header = PacketHeaderCreator.Create(commandType, MessageType.OverallMatchData, data.Length);
-                communicator.SendDataAsPacket(new Packet(header, data));
-            }
+            PacketHeader header = PacketHeaderCreator.Create(commandType, MessageType.OverallMatchData, data.Length);
+            communicator.SendDataAsPacket(new Packet(header, data));
+
+            semaphore.Release();
         }
 
         public event EventHandler MatchStarted;
