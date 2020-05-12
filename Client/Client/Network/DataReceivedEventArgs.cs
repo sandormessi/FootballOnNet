@@ -1,4 +1,4 @@
-﻿namespace FootballClient.Network
+﻿namespace Client.Network
 {
     public class DataReceivedEventArgs<T>
     {

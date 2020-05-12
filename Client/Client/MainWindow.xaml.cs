@@ -1,4 +1,4 @@
-﻿namespace FootballClient
+﻿namespace Client
 {
     using System;
     using System.Collections.Generic;
@@ -11,9 +11,11 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using FootballClient.Models;
-    using FootballClient.Models.Message.InitialMessages;
-    using FootballClient.Network;
+    using Client.Controller;
+    using Client.Models;
+    using Client.Models.Message.InitialMessages;
+    using Client.Network;
+    using Client.Serializer;
 
     /// <summary>Interaction logic for MainWindow.xaml.</summary>
     public partial class MainWindow
@@ -23,7 +25,6 @@
         private readonly ServerCommunicator communicator;
         private readonly Team team = new Team
         {
-
             // The players int THIS TEAM
             Players = new List<Player>
             {
@@ -61,7 +62,7 @@
 
         private void Controller_MatchOver(object sender, EventArgs e)
         {
-            info.Text = $"Final result: {controller.matchResult.HomeGoals}:{controller.matchResult.AwayGoals}";
+            info.Text = $"Final result: {controller.MatchResult.HomeGoals}:{controller.MatchResult.AwayGoals}";
         }
 
         private async void OverallMatchStandingReceived(object sender, EventArgs e)
@@ -88,6 +89,7 @@
            
             await footballPitch.Dispatcher.InvokeAsync(() =>
             {
+                // Sets the ball's position on the pitch
                 UIElement ball = footballPitch.Children.Cast<UIElement>().Last();
                 Canvas.SetLeft(ball, controller.OverallMatchStanding.BallPosition.X);
                 Canvas.SetTop(ball, controller.OverallMatchStanding.BallPosition.Y);
@@ -120,7 +122,6 @@
             initialPlayerPositions.Positions.Add(new Position { ID = controller.HomeTeam.Players[8].ID, X = 150, Y = 200 });
             initialPlayerPositions.Positions.Add(new Position { ID = controller.HomeTeam.Players[9].ID, X = 150, Y = 50 });
             initialPlayerPositions.Positions.Add(new Position { ID = controller.HomeTeam.Players[10].ID, X = 150, Y = 150 });
-
             controller.HomePositionCollection = initialPlayerPositions;
 
             Task.Factory.StartNew(() =>
@@ -150,6 +151,22 @@
 
         private async void SetHomeTeamPositions()
         {
+
+            foreach (Position awayPosition in controller.AwayPositionCollection.Positions)
+            {
+                awayPosition.X++;
+                awayPosition.Y++;
+            }
+
+            foreach (Position homePosition in controller.HomePositionCollection.Positions)
+            {
+                homePosition.X++;
+                homePosition.Y++;
+            }
+
+            controller.BallPosition.X++;
+            controller.BallPosition.Y++;
+
             // Then move the players on the GUI
             await MoveHomePlayers();
         }

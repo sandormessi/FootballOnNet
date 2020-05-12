@@ -1,4 +1,4 @@
-﻿namespace FootballClient.Network
+﻿namespace Client.Network
 {
     using System;
     using System.IO;

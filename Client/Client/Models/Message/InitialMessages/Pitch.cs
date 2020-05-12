@@ -1,4 +1,4 @@
-﻿namespace FootballClient.Models.Message.InitialMessages
+﻿namespace Client.Models.Message.InitialMessages
 {
     /// <summary>Represents the football pitch.</summary>
     public class Pitch : IdentifiableObject

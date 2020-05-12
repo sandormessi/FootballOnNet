@@ -1,4 +1,4 @@
-﻿namespace FootballClient.Models.Message.InitialMessages
+﻿namespace Client.Models.Message.InitialMessages
 {
     using System.Collections.Generic;
 

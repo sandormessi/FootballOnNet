@@ -1,4 +1,4 @@
-﻿namespace FootballClient.Models
+﻿namespace Client.Models
 {
     public class MatchTime
     {
