@@ -1,4 +1,4 @@
-﻿namespace FootballClient
+﻿namespace Client.Serializer
 {
     using System;
     using System.IO;

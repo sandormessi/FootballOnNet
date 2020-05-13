@@ -1,12 +1,13 @@
-﻿namespace FootballClient
+﻿namespace Client.Controller
 {
     using System;
     using System.Diagnostics;
     using System.IO;
 
-    using FootballClient.Models;
-    using FootballClient.Models.Message.InitialMessages;
-    using FootballClient.Network;
+    using Client.Models;
+    using Client.Models.Message.InitialMessages;
+    using Client.Network;
+    using Client.Serializer;
 
     public class ClientGameController
     {
@@ -51,7 +52,7 @@
         public PositionCollection AwayPositionCollection { get; private set; }
 
         public OverallMatchStanding OverallMatchStanding { get; private set; }
-        public MatchStanding matchResult;
+        public MatchStanding MatchResult;
 
         private PositionCollection homePositionCollection;
 
@@ -103,9 +104,9 @@
             // End of match
             else if ((messageType == MessageType.MatchResult) && (command == CommandType.Set))
             {
-                matchResult = DataSerializer.ReadSerializedData<MatchStanding>(data.Data);
+                MatchResult = DataSerializer.ReadSerializedData<MatchStanding>(data.Data);
 
-                Debug.WriteLine($"Final result : {matchResult.HomeGoals}:{matchResult.AwayGoals}");
+                Debug.WriteLine($"Final result : {MatchResult.HomeGoals}:{MatchResult.AwayGoals}");
                 communicator.Stop();
                 OnMatchOver();
             }

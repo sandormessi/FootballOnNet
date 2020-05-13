@@ -1,4 +1,4 @@
-﻿namespace FootballClient
+﻿namespace Client
 {
     using System;
     using System.Collections.Generic;
@@ -11,9 +11,11 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using FootballClient.Models;
-    using FootballClient.Models.Message.InitialMessages;
-    using FootballClient.Network;
+    using Client.Controller;
+    using Client.Models;
+    using Client.Models.Message.InitialMessages;
+    using Client.Network;
+    using Client.Serializer;
 
     /// <summary>Interaction logic for MainWindow.xaml.</summary>
     public partial class MainWindow
@@ -60,7 +62,7 @@
 
         private void Controller_MatchOver(object sender, EventArgs e)
         {
-            info.Text = $"Final result: {controller.matchResult.HomeGoals}:{controller.matchResult.AwayGoals}";
+            info.Text = $"Final result: {controller.MatchResult.HomeGoals}:{controller.MatchResult.AwayGoals}";
         }
 
         private async void OverallMatchStandingReceived(object sender, EventArgs e)
@@ -149,12 +151,21 @@
 
         private async void SetHomeTeamPositions()
         {
-            // The movement (logic) of this Client
-            // Goes here
-            // Invoke this method and set the positions (players and the ball)
-            // Ball: controller.BallPosition
-            // Players: controller.HomePositionCollection.Positions
-            // The positions will be sent continuously
+
+            foreach (Position awayPosition in controller.AwayPositionCollection.Positions)
+            {
+                awayPosition.X++;
+                awayPosition.Y++;
+            }
+
+            foreach (Position homePosition in controller.HomePositionCollection.Positions)
+            {
+                homePosition.X++;
+                homePosition.Y++;
+            }
+
+            controller.BallPosition.X++;
+            controller.BallPosition.Y++;
 
             // Then move the players on the GUI
             await MoveHomePlayers();

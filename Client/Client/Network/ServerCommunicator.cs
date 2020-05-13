@@ -1,4 +1,4 @@
-﻿namespace FootballClient.Network
+﻿namespace Client.Network
 {
     using System;
     using System.IO;
@@ -101,19 +101,9 @@
 
                 Console.WriteLine($"Data received: {receivedData.Length} byte(s).");
                 OnDataReceived(new DataReceivedEventArgs<Packet>(new Packet(header, receivedData)));
-                //DiscardDataInStream(stream);
             }
 
             receiveInProgress = false;
-        }
-
-        private static void DiscardDataInStream(NetworkStream networkStream)
-        {
-            var buffer = new byte[8192];
-            while (networkStream.DataAvailable)
-            {
-                networkStream.Read(buffer, 0, buffer.Length);
-            }
         }
 
         private Stream ReadPackageData(PacketHeader header)

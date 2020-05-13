@@ -1,8 +1,8 @@
-﻿namespace FootballClient.Models
+﻿namespace Client.Models
 {
     using System;
 
-    using FootballClient.Models.Message.InitialMessages;
+    using Client.Models.Message.InitialMessages;
 
     /// <summary>Represents a player int a <see cref="Team"/>.</summary>
     public class Player : IEquatable<Player>
