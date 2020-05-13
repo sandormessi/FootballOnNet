@@ -4,8 +4,8 @@
     public class Pitch : IdentifiableObject
     {
         /// <summary>Gets or sets the width of this <see cref="Pitch"/>.</summary>
-        public int Width { get; set; }
+        public int Width { get; }
         /// <summary>Gets or sets the height of this <see cref="Pitch"/>.</summary>
-        public int Height { get; set; }
+        public int Height { get; }
     }
 }

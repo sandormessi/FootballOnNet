@@ -13,13 +13,8 @@
             var xmlSerializer = new XmlSerializer(typeof(T));
             try
             {
-                var deserializedData = xmlSerializer.Deserialize(data) as T;
-                if (deserializedData is null)
-                {
-                    Console.WriteLine("Invalid data.");
-                }
-
-                return deserializedData;
+               var deserializedData = DeserializeData<T>(data, xmlSerializer);
+               return deserializedData;
             }
             catch
             {
@@ -35,8 +30,7 @@
 
             try
             {
-                xmlSerializer.Serialize(dataAsStream, data);
-                return dataAsStream;
+               return SerializeData(data, xmlSerializer, dataAsStream);
             }
             catch
             {
@@ -44,5 +38,23 @@
                 return null;
             }
         }
-    }
+
+        private static Stream SerializeData<T>(T data, XmlSerializer xmlSerializer, MemoryStream dataAsStream)
+        {
+           xmlSerializer.Serialize(dataAsStream, data);
+           return dataAsStream;
+        }
+
+        private static T DeserializeData<T>(Stream data, XmlSerializer xmlSerializer)
+           where T : class
+        {
+           var deserializedData = xmlSerializer.Deserialize(data) as T;
+           if (deserializedData is null)
+           {
+              Console.WriteLine("Invalid data.");
+           }
+
+           return deserializedData;
+        }
+   }
 }

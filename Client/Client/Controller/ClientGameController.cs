@@ -49,7 +49,7 @@
             }
         }
 
-        public PositionCollection AwayPositionCollection { get; private set; }
+        public PositionCollection AwayPositionCollection { get; }
 
         public OverallMatchStanding OverallMatchStanding { get; private set; }
         public MatchStanding MatchResult;
@@ -65,50 +65,28 @@
             {
                 if (messageRead == 0)
                 {
-                    if ((messageType == MessageType.Pitch) && (command == CommandType.Set))
-                    {
-                        Pitch = DataSerializer.ReadSerializedData<Pitch>(data.Data);
-                        Debug.WriteLine("Pitch data has been processed.");
-                    }
-                    else
-                    {
-                        return;
-                    }
+                   if (ProcessPitchData(data, messageType, command))
+                   {
+                      return;
+                   }
                 }
                 else if (messageRead == 1)
                 {
-                    if ((messageType == MessageType.Team) && (command == CommandType.Set))
-                    {
-                        AwayTeam = DataSerializer.ReadSerializedData<Team>(data.Data);
-                        Debug.WriteLine("Team data has been processed.");
-                    }
-                    else
-                    {
-                        return;
-                    }
+                   if (ProcessTeamData(data, messageType, command))
+                   {
+                      return;
+                   }
                 }
             }
             // Continuous match result
             else if((messageType == MessageType.OverallMatchData) && (command == CommandType.ContinuousSet))
             {
-                if (!matchStarted)
-                {
-                    OnMatchStarted();
-                }
-
-                OverallMatchStanding = DataSerializer.ReadSerializedData<OverallMatchStanding>(data.Data);
-                matchStarted = true;
-                OnOverallMatchStandingReceived();
-                Debug.WriteLine($"Standing: {OverallMatchStanding.Standing.HomeGoals}:{OverallMatchStanding.Standing.AwayGoals}");
+               ProcessOverallMatchData(data);
             }
             // End of match
             else if ((messageType == MessageType.MatchResult) && (command == CommandType.Set))
             {
-                MatchResult = DataSerializer.ReadSerializedData<MatchStanding>(data.Data);
-
-                Debug.WriteLine($"Final result : {MatchResult.HomeGoals}:{MatchResult.AwayGoals}");
-                communicator.Stop();
-                OnMatchOver();
+               ProcessMatchResult(data);
             }
 
             messageRead++;
@@ -156,5 +134,57 @@
         {
             OverallMatchStandingReceived?.Invoke(this, EventArgs.Empty);
         }
-    }
+
+        private void ProcessMatchResult(Packet data)
+        {
+           MatchResult = DataSerializer.ReadSerializedData<MatchStanding>(data.Data);
+
+           Debug.WriteLine($"Final result : {MatchResult.HomeGoals}:{MatchResult.AwayGoals}");
+           communicator.Stop();
+           OnMatchOver();
+        }
+
+        private void ProcessOverallMatchData(Packet data)
+        {
+           if (!matchStarted)
+           {
+              OnMatchStarted();
+           }
+
+           OverallMatchStanding = DataSerializer.ReadSerializedData<OverallMatchStanding>(data.Data);
+           matchStarted = true;
+           OnOverallMatchStandingReceived();
+           Debug.WriteLine($"Standing: {OverallMatchStanding.Standing.HomeGoals}:{OverallMatchStanding.Standing.AwayGoals}");
+        }
+
+        private bool ProcessTeamData(Packet data, MessageType messageType, CommandType command)
+        {
+           if ((messageType == MessageType.Team) && (command == CommandType.Set))
+           {
+              AwayTeam = DataSerializer.ReadSerializedData<Team>(data.Data);
+              Debug.WriteLine("Team data has been processed.");
+           }
+           else
+           {
+              return true;
+           }
+
+           return false;
+        }
+
+        private bool ProcessPitchData(Packet data, MessageType messageType, CommandType command)
+        {
+           if ((messageType == MessageType.Pitch) && (command == CommandType.Set))
+           {
+              Pitch = DataSerializer.ReadSerializedData<Pitch>(data.Data);
+              Debug.WriteLine("Pitch data has been processed.");
+           }
+           else
+           {
+              return true;
+           }
+
+           return false;
+        }
+   }
 }

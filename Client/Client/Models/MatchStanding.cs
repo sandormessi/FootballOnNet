@@ -2,7 +2,7 @@
 {
     public class MatchStanding
     {
-        public int HomeGoals { get; set; }
-        public int AwayGoals { get; set; }
+        public int HomeGoals { get; }
+        public int AwayGoals { get; }
     }
 }

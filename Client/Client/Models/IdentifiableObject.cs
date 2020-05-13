@@ -6,6 +6,6 @@
     public class IdentifiableObject
     {
         /// <summary>Gets or sets the unique ID of this object.</summary>
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
     }
 }
