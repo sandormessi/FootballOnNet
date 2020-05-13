@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Referee.cs" />
+    <Compile Include="Models\PositionComparer.cs" />
     <Compile Include="Serializer\DataSerializer.cs" />
     <Compile Include="Controllers\ServerGameController.cs" />
     <Compile Include="Models\Ball.cs" />

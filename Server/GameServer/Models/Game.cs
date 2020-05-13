@@ -72,6 +72,7 @@
             DetermineScore();
             DetermineBallPossessor();
         }
+
         public void ProcessBallPosition(Position ballPosition)
         {
             BallPosition = ballPosition ?? throw new ArgumentNullException(nameof(ballPosition));
@@ -83,8 +84,6 @@
             }
         }
 
-
-
         private void DetermineScore()
         {
             IEnumerable<Position> allPosition = AwayPositions.Positions.Union(HomePositions.Positions);
@@ -95,6 +94,7 @@
                 Scores.Add(new Score { Scorer = Ball.Owner });
             }
         }
+
         private void DetermineBallPossessor()
         {
             IEnumerable<Position> allPosition = AwayPositions.Positions.Union(HomePositions.Positions);

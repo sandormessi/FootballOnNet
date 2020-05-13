@@ -24,6 +24,7 @@
                 {
                     OnTeamIsReady();
                 }
+
                 teamReady = value;
             }
         }

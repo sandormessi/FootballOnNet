@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Timers;
 
@@ -14,7 +15,7 @@
 
     public class ServerGameController
     {
-        private readonly object syncObject = new object();
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
         private readonly MatchTimer matchTimer;
         private readonly Random random = new Random(2576);
@@ -157,8 +158,6 @@
                         var teamDeserialized = DataSerializer.ReadSerializedData<Team>(packet.Data);
                         if (teamDeserialized is null)
                         {
-                            // Do not increment the MessageRead field
-                            // Next time the server still be waiting for this message type
                             return;
                         }
 
@@ -170,8 +169,7 @@
 
                     case 0:
                         Console.WriteLine("Invalid packet.");
-                        // Do not increment the MessageRead field
-                        // Next time the server still be waiting for this message type
+                       
                         return;
 
                     case 1 when (messageType == MessageType.Pitch) && (command == CommandType.Get):
@@ -190,8 +188,7 @@
                     
                     case 1:
                         Console.WriteLine("Invalid packet.");
-                        // Do not increment the MessageRead field
-                        // Next time the server still be waiting for this message type
+              
                         return;
                 }
             }
@@ -238,16 +235,17 @@
 
         private void SendOverallMatchData(ServerCommunicator communicator, CommandType commandType)
         {
-            lock (syncObject)
-            {
+            semaphore.Wait();
+
                 Stream data = DataSerializer.CreateSerializedData(OverallMatchStandingCreator.Create(game, matchTimer,
-                    communicator != homeTeamCommunicator));
+                communicator != homeTeamCommunicator));
 
-                PositionCollection test = DataSerializer.ReadSerializedData<OverallMatchStanding>(data).PositionCollection;
+            PositionCollection test = DataSerializer.ReadSerializedData<OverallMatchStanding>(data).PositionCollection;
 
-                PacketHeader header = PacketHeaderCreator.Create(commandType, MessageType.OverallMatchData, data.Length);
-                communicator.SendDataAsPacket(new Packet(header, data));
-            }
+            PacketHeader header = PacketHeaderCreator.Create(commandType, MessageType.OverallMatchData, data.Length);
+            communicator.SendDataAsPacket(new Packet(header, data));
+
+            semaphore.Release();
         }
 
         public event EventHandler MatchStarted;
