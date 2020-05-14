@@ -7,7 +7,7 @@ And a "body" as a Stream
 
 The messages are XML-messages, except when the data is a simple type, like Integer.
 The size of Pitch, the time of Match, the Scores (goals) are determined by the Server.
-The Client just moves the ball and the players. The Server acts as a mediator and the Referre as well.
+The Client just moves the ball and the players. The Server acts as a mediator and the Referee as well.
 The connection's state is not "stored" --> if the connection is lost then it cannot be recovered.
 
 The initial messages must be sent in the correct order!

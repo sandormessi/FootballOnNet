@@ -14,7 +14,7 @@
                 throw new System.ArgumentNullException(nameof(position2));
             }
 
-            return position1.X == position2.X && position1.Y == position2.Y;
+            return (position1.X == position2.X) && (position1.Y == position2.Y);
         }
     }
 }

@@ -6,43 +6,45 @@
 
     public class Referee
     {
-        private static Position PositionOfHomeGoal { get; } = new Position { X = 0, Y = 250 };
-        private static Position PositionOfAwayGoal { get; } = new Position { X = 500, Y = 250 };
+       private static Position PositionOfHomeGoal { get; } = new Position { X = 0, Y = 250 };
 
-        public Referee(PositionCollection homePositionCollection, PositionCollection awayPositionCollection)
-        {
-            HomePositionCollection = homePositionCollection ?? throw new ArgumentNullException(nameof(homePositionCollection));
-            AwayPositionCollection = awayPositionCollection ?? throw new ArgumentNullException(nameof(awayPositionCollection));
-        }
+       private static Position PositionOfAwayGoal { get; } = new Position { X = 500, Y = 250 };
 
-        public PositionCollection HomePositionCollection { get; }
-        public PositionCollection AwayPositionCollection { get; }
+       public Referee(PositionCollection homePositionCollection, PositionCollection awayPositionCollection)
+       {
+          HomePositionCollection = homePositionCollection ?? throw new ArgumentNullException(nameof(homePositionCollection));
+          AwayPositionCollection = awayPositionCollection ?? throw new ArgumentNullException(nameof(awayPositionCollection));
+       }
 
-        public Position BallPosition { get; set; }
+       public PositionCollection HomePositionCollection { get; }
 
-        public bool IsGoal(out bool isHome)
-        {
-            isHome = false;
+       public PositionCollection AwayPositionCollection { get; }
 
-            foreach (Position homePosition in HomePositionCollection.Positions)
-            {
-                if ((homePosition == PositionOfAwayGoal) && (BallPosition == homePosition))
-                {
-                    isHome = true;
-                    return true;
-                }
-            }
+       public Position BallPosition { get; set; }
 
-            foreach (Position awayPosition in AwayPositionCollection.Positions)
-            {
-                if ((awayPosition == PositionOfHomeGoal) && (BallPosition == awayPosition))
-                {
-                    isHome = false;
-                    return true;
-                }
-            }
+       public bool IsGoal(out bool isHome)
+       {
+          isHome = false;
 
-            return false;
+          foreach (Position homePosition in HomePositionCollection.Positions)
+          {
+             if (PositionComparer.Equals(homePosition, PositionOfAwayGoal) && PositionComparer.Equals(BallPosition, homePosition))
+             {
+                isHome = true;
+                return true;
+             }
+          }
+
+          foreach (Position awayPosition in AwayPositionCollection.Positions)
+          {
+             if (PositionComparer.Equals(awayPosition, PositionOfHomeGoal) && PositionComparer.Equals(BallPosition, awayPosition))
+             {
+                isHome = false;
+                return true;
+             }
+          }
+
+          return false;
         }
     }
 }

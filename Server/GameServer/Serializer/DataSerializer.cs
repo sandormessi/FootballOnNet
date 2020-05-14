@@ -13,19 +13,25 @@
             var xmlSerializer = new XmlSerializer(typeof(T));
             try
             {
-                var deserializedData = xmlSerializer.Deserialize(data) as T;
-                if (deserializedData is null)
-                {
-                    Console.WriteLine("Invalid data.");
-                }
-
-                return deserializedData;
+               return DeserializeData<T>(data, xmlSerializer);
             }
             catch
             {
                 Console.WriteLine("Invalid data.");
                 return null;
             }
+        }
+
+        private static T DeserializeData<T>(Stream data, XmlSerializer xmlSerializer)
+           where T : class
+        {
+           var deserializedData = xmlSerializer.Deserialize(data) as T;
+           if (deserializedData is null)
+           {
+              Console.WriteLine("Invalid data.");
+           }
+
+           return deserializedData;
         }
 
         public static Stream CreateSerializedData<T>(T data)

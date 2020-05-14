@@ -9,7 +9,7 @@
         BallPosition,
         /// <summary>Collection of positions.</summary>
         PositionCollection,
-        /// <summary>The aways team.</summary>
+        /// <summary>The away team.</summary>
         Team,
         /// <summary>The pitch.</summary>
         Pitch,

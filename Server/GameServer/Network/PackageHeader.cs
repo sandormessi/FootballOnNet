@@ -25,7 +25,6 @@
         /// <summary>Gets the type of the message.</summary>
         public byte MessageType { get; }
 
-        
         public override string ToString()
         {
             return $"Command: {Command}, PackageSize: {PackageSize}, MessageType: {MessageType}";
